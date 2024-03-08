@@ -11,6 +11,9 @@ chatForm.addEventListener("submit", (e) => {
   e.preventDefault();
 
   socket.emit("chatMessage", input.value);
+
+  input.value = "";
+  input.focus();
 });
 
 function putMessageInChat(message) {
