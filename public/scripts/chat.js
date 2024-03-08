@@ -19,8 +19,8 @@ chatForm.addEventListener("submit", (e) => {
 function putMessageInChat(message) {
   const div = document.createElement("div");
   div.classList.add("message");
-  div.innerHTML = `<p class="user">User</p>
-    <p class="text">${message}</p>`;
+  div.innerHTML = `<p class="user">${message.username}</p>
+    <p class="text">${message.text}</p>`;
   const parent = document.getElementById("message-container");
   parent.appendChild(div);
 }
