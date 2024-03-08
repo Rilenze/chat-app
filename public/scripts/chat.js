@@ -4,7 +4,7 @@ const input = document.getElementById("message-input");
 const socket = io();
 
 socket.on("message", (message) => {
-  console.log(message);
+  putMessageInChat(message);
 });
 
 chatForm.addEventListener("submit", (e) => {
@@ -12,3 +12,12 @@ chatForm.addEventListener("submit", (e) => {
 
   socket.emit("chatMessage", input.value);
 });
+
+function putMessageInChat(message) {
+  const div = document.createElement("div");
+  div.classList.add("message");
+  div.innerHTML = `<p class="user">User</p>
+    <p class="text">${message}</p>`;
+  const parent = document.getElementById("message-container");
+  parent.appendChild(div);
+}
