@@ -2,7 +2,7 @@ const express = require("express");
 const http = require("http");
 const socketio = require("socket.io");
 const messageObject = require("./modules/message");
-const { userJoin, userLeaves } = require("./modules/users");
+const { userJoin, userLeaves, getUsers } = require("./modules/users");
 const usernameGenerator = require("username-generator");
 
 const app = express();
@@ -33,6 +33,9 @@ io.on("connection", (socket) => {
     messageObject("Chat Bot", `${username} has joined the chat`)
   );
 
+  // Sending users to frontend
+  io.emit("users", getUsers());
+
   // catching chat message
   socket.on("chatMessage", (message) => {
     io.emit("message", messageObject(username, message));
@@ -40,12 +43,13 @@ io.on("connection", (socket) => {
 
   // runs when user disconnects
   socket.on("disconnect", () => {
+    const leavingUser = userLeaves(socket.id);
     io.emit(
       "message",
       messageObject("Chat Bot", `${username} has left the chat`)
     );
 
-    const leavingUser = userLeaves(socket.id);
+    io.emit("users", getUsers());
   });
 });
 

@@ -1,10 +1,15 @@
 const chatForm = document.getElementById("form");
 const input = document.getElementById("message-input");
+const list = document.getElementById("users");
 
 const socket = io();
 
 socket.on("message", (message) => {
   putMessageInChat(message);
+});
+
+socket.on("users", (users) => {
+  updateList(users);
 });
 
 chatForm.addEventListener("submit", (e) => {
@@ -23,4 +28,10 @@ function putMessageInChat(message) {
     <p class="text">${message.text}</p>`;
   const parent = document.getElementById("message-container");
   parent.appendChild(div);
+}
+
+function updateList(users) {
+  list.innerHTML = `
+    ${users.map((user) => `<li>${user.username}</li>`).join("")}
+  `;
 }

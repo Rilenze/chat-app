@@ -22,7 +22,12 @@ function userLeaves(id) {
   }
 }
 
+function getUsers() {
+  return users;
+}
+
 module.exports = {
   userJoin,
   userLeaves,
+  getUsers,
 };
