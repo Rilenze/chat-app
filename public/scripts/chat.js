@@ -1,11 +1,14 @@
 const chatForm = document.getElementById("form");
 const input = document.getElementById("message-input");
 const list = document.getElementById("users");
+const messageContainer = document.getElementById("message-container");
 
 const socket = io();
 
 socket.on("message", (message) => {
   putMessageInChat(message);
+
+  messageContainer.scrollTop = messageContainer.scrollHeight;
 });
 
 socket.on("users", (users) => {
