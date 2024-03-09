@@ -20,7 +20,7 @@ body {
 }
 
 ul {
-    list-style: none;
+    /* list-style: none; */
 }
 
 #send-button {
@@ -89,7 +89,13 @@ ul {
     
 }
 
+#user-sidebar {
+    overflow-y: scroll;
+    padding-right: 10px;
+    height: 300px;
+}
 
-#users {
-
+#users li {
+    padding: 10px 5px;
+    font-size: 16px;
 }
