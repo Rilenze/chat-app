@@ -2,6 +2,8 @@ const express = require("express");
 const http = require("http");
 const socketio = require("socket.io");
 const messageObject = require("./modules/message");
+const { userJoin } = require("./modules/users");
+const usernameGenerator = require("username-generator");
 
 const app = express();
 const server = http.createServer(app);
@@ -16,25 +18,32 @@ app.get("/", function (req, res) {
 
 // Running when client connects
 io.on("connection", (socket) => {
+  const username = usernameGenerator.generateUsername();
+
+  const user = userJoin(socket.id, username);
+
   socket.emit(
     "message",
-    messageObject("Chat Bot", "Welcome to global chat room")
+    messageObject("Chat Bot", `Welcome to the global chat room ${username}`)
   );
 
   // runs when user connects
   socket.broadcast.emit(
     "message",
-    messageObject("Chat Bot", "A user has joined the chat")
+    messageObject("Chat Bot", `A ${username} has joined the chat`)
   );
-
-  // runs when user disconnects
-  socket.on("disconnect", () => {
-    io.emit("message", messageObject("Chat Bot", "A user has left the chat"));
-  });
 
   // catching chat message
   socket.on("chatMessage", (message) => {
     io.emit("message", messageObject("User", message));
+  });
+
+  // runs when user disconnects
+  socket.on("disconnect", () => {
+    io.emit(
+      "message",
+      messageObject("Chat Bot", `A ${username} has left the chat`)
+    );
   });
 });
 
