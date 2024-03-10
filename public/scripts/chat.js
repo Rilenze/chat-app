@@ -48,8 +48,17 @@ function updateList(users) {
     let naziv = document.createTextNode(user.username);
 
     a.appendChild(naziv);
+    a.title = user.username;
     a.href = "#";
     li.appendChild(a);
     list.appendChild(li);
+
+    const username = a.getAttribute("value");
+    console.log(username);
+
+    // a.addEventListener('click', () => {
+
+    //   socket.emit("joinRoom", {a.getAttribute('value'), })
+    // });
   });
 }

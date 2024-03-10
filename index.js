@@ -52,12 +52,15 @@ io.on("connection", (socket) => {
   // runs when user disconnects
   socket.on("disconnect", () => {
     const leavingUser = userLeaves(socket.id);
-    io.emit(
-      "message",
-      messageObject("Chat Bot", `${username} has left the chat`)
-    );
 
-    io.emit("users", getRoomUsers(leavingUser.room));
+    if (leavingUser) {
+      io.emit(
+        "message",
+        messageObject("Chat Bot", `${username} has left the chat`)
+      );
+
+      io.emit("users", getRoomUsers(leavingUser.room));
+    }
   });
 });
 
