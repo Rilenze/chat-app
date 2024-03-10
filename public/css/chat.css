@@ -102,6 +102,8 @@ body {
 
 #users li a {
     cursor: pointer;
+    text-decoration: none;
+    color: black;
 }
 
 #users li a:hover {

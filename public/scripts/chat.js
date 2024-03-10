@@ -39,7 +39,17 @@ function putMessageInChat(message) {
 }
 
 function updateList(users) {
-  list.innerHTML = `
-    ${users.map((user) => `<li><a>${user.username}</a></li>`).join("")}
-  `;
+  list.innerHTML = "";
+
+  users.forEach((user) => {
+    let li = document.createElement("li");
+    let a = document.createElement("a");
+    a.setAttribute("id", user.username);
+    let naziv = document.createTextNode(user.username);
+
+    a.appendChild(naziv);
+    a.href = "#";
+    li.appendChild(a);
+    list.appendChild(li);
+  });
 }
