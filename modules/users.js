@@ -1,8 +1,8 @@
 const users = [];
 
 // User joins the chat
-function userJoin(id, username) {
-  const user = { id, username };
+function userJoin(id, username, room) {
+  const user = { id, username, room };
 
   users.push(user);
 
@@ -22,12 +22,12 @@ function userLeaves(id) {
   }
 }
 
-function getUsers() {
+function getRoomUsers(room) {
   return users;
 }
 
 module.exports = {
   userJoin,
   userLeaves,
-  getUsers,
+  getRoomUsers,
 };

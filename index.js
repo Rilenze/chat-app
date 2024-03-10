@@ -2,7 +2,7 @@ const express = require("express");
 const http = require("http");
 const socketio = require("socket.io");
 const messageObject = require("./modules/message");
-const { userJoin, userLeaves, getUsers } = require("./modules/users");
+const { userJoin, userLeaves, getRoomUsers } = require("./modules/users");
 const usernameGenerator = require("username-generator");
 
 const app = express();
@@ -20,21 +20,29 @@ app.get("/", function (req, res) {
 io.on("connection", (socket) => {
   const username = usernameGenerator.generateUsername();
 
-  const user = userJoin(socket.id, username);
+  socket.on("joinRoom", ({ username2, room }) => {
+    console.log("mujo " + room);
 
-  socket.emit(
-    "message",
-    messageObject("Chat Bot", `Welcome to the global chat room ${username}`)
-  );
+    const user = userJoin(socket.id, username, room);
 
-  // runs when user connects
-  socket.broadcast.emit(
-    "message",
-    messageObject("Chat Bot", `${username} has joined the chat`)
-  );
+    socket.join(user.room);
 
-  // Sending users to frontend
-  io.emit("users", getUsers());
+    socket.emit(
+      "message",
+      messageObject("Chat Bot", `Welcome to the global chat room ${username}!`)
+    );
+
+    // runs when user connects
+    socket.broadcast
+      .to(user.room)
+      .emit(
+        "message",
+        messageObject("Chat Bot", `${username} has joined the chat`)
+      );
+
+    // Sending users to frontend
+    io.emit("users", getRoomUsers(user.room));
+  });
 
   // catching chat message
   socket.on("chatMessage", (message) => {
@@ -49,7 +57,7 @@ io.on("connection", (socket) => {
       messageObject("Chat Bot", `${username} has left the chat`)
     );
 
-    io.emit("users", getUsers());
+    io.emit("users", getRoomUsers(leavingUser.room));
   });
 });
 

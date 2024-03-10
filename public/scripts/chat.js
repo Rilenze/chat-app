@@ -15,6 +15,11 @@ socket.on("users", (users) => {
   updateList(users);
 });
 
+const room = "globalChat";
+const username2 = "Niko";
+
+socket.emit("joinRoom", { username2, room });
+
 chatForm.addEventListener("submit", (e) => {
   e.preventDefault();
 
@@ -35,6 +40,6 @@ function putMessageInChat(message) {
 
 function updateList(users) {
   list.innerHTML = `
-    ${users.map((user) => `<li>${user.username}</li>`).join("")}
+    ${users.map((user) => `<li><a>${user.username}</a></li>`).join("")}
   `;
 }
