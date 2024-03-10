@@ -4,6 +4,8 @@ const list = document.getElementById("users");
 const messageContainer = document.getElementById("message-container");
 
 const socket = io();
+const room = "globalChat";
+let username = "Čeka";
 
 socket.on("message", (message) => {
   putMessageInChat(message);
@@ -15,9 +17,12 @@ socket.on("users", (users) => {
   updateList(users);
 });
 
-const room = "globalChat";
-const username2 = "Niko";
+socket.on("username", (usr) => {
+  username = usr;
+});
 
+// Sending global chat room on the beggining of the connection
+const username2 = "niko";
 socket.emit("joinRoom", { username2, room });
 
 chatForm.addEventListener("submit", (e) => {
@@ -53,12 +58,12 @@ function updateList(users) {
     li.appendChild(a);
     list.appendChild(li);
 
-    const username = a.getAttribute("value");
-    console.log(username);
+    console.log(username + " " + a.title);
 
-    // a.addEventListener('click', () => {
+    // a.addEventListener("click", () => {
+    //   const username2 = a.title;
 
-    //   socket.emit("joinRoom", {a.getAttribute('value'), })
+    //   socket.emit("joinRoom", { username });
     // });
   });
 }

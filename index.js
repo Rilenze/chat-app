@@ -20,6 +20,8 @@ app.get("/", function (req, res) {
 io.on("connection", (socket) => {
   const username = usernameGenerator.generateUsername();
 
+  socket.emit("username", username);
+
   socket.on("joinRoom", ({ username2, room }) => {
     console.log("mujo " + room);
 
