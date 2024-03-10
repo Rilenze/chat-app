@@ -2,6 +2,7 @@ const chatForm = document.getElementById("form");
 const input = document.getElementById("message-input");
 const list = document.getElementById("users");
 const messageContainer = document.getElementById("message-container");
+const global = document.getElementById("global");
 
 const socket = io();
 const room = "Global";
@@ -60,7 +61,8 @@ function updateList(users) {
       const username2 = a.title;
       let privateRoom = "proba";
 
-      if (username > username2) privateRoom = username + " & " + username2;
+      if (username === username2) return;
+      else if (username > username2) privateRoom = username + " & " + username2;
       else privateRoom = username2 + " & " + username;
 
       messageContainer.innerHTML = "";
@@ -68,3 +70,8 @@ function updateList(users) {
     });
   });
 }
+
+global.addEventListener("click", () => {
+  console.log("mrmot");
+  socket.emit("joinRoom", "Global");
+});
