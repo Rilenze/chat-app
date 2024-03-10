@@ -11,7 +11,6 @@ function userJoin(id, username, room) {
 }
 
 // User leaves the chat
-
 function userLeaves(id) {
   const index = users.findIndex((user) => user.id === id);
 
@@ -22,12 +21,27 @@ function userLeaves(id) {
   }
 }
 
-function getRoomUsers(room) {
-  return users.filter((user) => user.room === room);
+function getOnlineUsers() {
+  return users;
+}
+
+function getCurrentUser(id) {
+  return users.find((user) => user.id === id);
+}
+
+function userChangeRoom(id, room) {
+  const index = users.findIndex((user) => user.id === id);
+
+  if (index !== -1) {
+    users[index].room = room;
+    console.log(users);
+  }
 }
 
 module.exports = {
   userJoin,
   userLeaves,
-  getRoomUsers,
+  getOnlineUsers,
+  getCurrentUser,
+  userChangeRoom,
 };

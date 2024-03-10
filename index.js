@@ -2,7 +2,13 @@ const express = require("express");
 const http = require("http");
 const socketio = require("socket.io");
 const messageObject = require("./modules/message");
-const { userJoin, userLeaves, getRoomUsers } = require("./modules/users");
+const {
+  userJoin,
+  userLeaves,
+  getOnlineUsers,
+  getCurrentUser,
+  userChangeRoom,
+} = require("./modules/users");
 const usernameGenerator = require("username-generator");
 
 const app = express();
@@ -26,7 +32,13 @@ io.on("connection", (socket) => {
     console.log("mujo " + room);
 
     if (!onlineUser) userJoin(socket.id, username, room);
+    else {
+      const user = getCurrentUser(socket.id);
+      socket.leave(user.room);
+      userChangeRoom(socket.id, room);
+    }
 
+    console.log(room);
     socket.join(room);
 
     socket.emit(
@@ -43,12 +55,14 @@ io.on("connection", (socket) => {
       );
 
     // Sending users to frontend
-    if (room === "Global") io.emit("users", getRoomUsers(room));
+    if (room === "Global") io.emit("users", getOnlineUsers());
   });
 
   // catching chat message
   socket.on("chatMessage", (message) => {
-    io.emit("message", messageObject(username, message));
+    const user = getCurrentUser(socket.id);
+    console.log("Soba: " + user.room + ". Username: " + user.username);
+    io.to(user.room).emit("message", messageObject(username, message));
   });
 
   // runs when user disconnects
@@ -61,7 +75,7 @@ io.on("connection", (socket) => {
         messageObject("Chat Bot", `${username} has left the chat`)
       );
 
-      io.emit("users", getRoomUsers(leavingUser.room));
+      io.emit("users", getOnlineUsers());
     }
   });
 });
