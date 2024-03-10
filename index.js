@@ -22,12 +22,12 @@ io.on("connection", (socket) => {
 
   socket.emit("username", username);
 
-  socket.on("joinRoom", (room) => {
+  socket.on("joinRoom", ({ onlineUser, room }) => {
     console.log("mujo " + room);
 
-    const user = userJoin(socket.id, username, room);
+    if (!onlineUser) userJoin(socket.id, username, room);
 
-    socket.join(user.room);
+    socket.join(room);
 
     socket.emit(
       "message",
@@ -36,14 +36,14 @@ io.on("connection", (socket) => {
 
     // runs when user connects
     socket.broadcast
-      .to(user.room)
+      .to(room)
       .emit(
         "message",
         messageObject("Chat Bot", `${username} has joined the chat`)
       );
 
     // Sending users to frontend
-    io.emit("users", getRoomUsers(user.room));
+    if (room === "Global") io.emit("users", getRoomUsers(room));
   });
 
   // catching chat message

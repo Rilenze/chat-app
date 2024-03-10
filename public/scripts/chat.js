@@ -23,7 +23,8 @@ socket.on("username", (usr) => {
 });
 
 // Sending global chat room on the beggining of the connection
-socket.emit("joinRoom", room);
+const onlineUser = null;
+socket.emit("joinRoom", { onlineUser, room });
 
 chatForm.addEventListener("submit", (e) => {
   e.preventDefault();
@@ -59,19 +60,23 @@ function updateList(users) {
 
     a.addEventListener("click", () => {
       const username2 = a.title;
-      let privateRoom = "proba";
+      let room = "proba";
 
       if (username === username2) return;
-      else if (username > username2) privateRoom = username + " & " + username2;
-      else privateRoom = username2 + " & " + username;
+      else if (username > username2) room = username + " & " + username2;
+      else room = username2 + " & " + username;
 
+      const onlineUser = username;
       messageContainer.innerHTML = "";
-      socket.emit("joinRoom", privateRoom);
+      socket.emit("joinRoom", { onlineUser, room });
     });
   });
 }
 
 global.addEventListener("click", () => {
   console.log("mrmot");
-  socket.emit("joinRoom", "Global");
+  const onlineUser = username;
+  const room = "Global";
+  messageContainer.innerHTML = "";
+  socket.emit("joinRoom", { onlineUser, room });
 });
