@@ -4,7 +4,7 @@ const list = document.getElementById("users");
 const messageContainer = document.getElementById("message-container");
 
 const socket = io();
-const room = "globalChat";
+const room = "Global";
 let username = "Čeka";
 
 socket.on("message", (message) => {
@@ -22,8 +22,7 @@ socket.on("username", (usr) => {
 });
 
 // Sending global chat room on the beggining of the connection
-const username2 = "niko";
-socket.emit("joinRoom", { username2, room });
+socket.emit("joinRoom", room);
 
 chatForm.addEventListener("submit", (e) => {
   e.preventDefault();
@@ -39,8 +38,7 @@ function putMessageInChat(message) {
   div.classList.add("message");
   div.innerHTML = `<p class="user">${message.username}</p>
     <p class="text">${message.text}</p>`;
-  const parent = document.getElementById("message-container");
-  parent.appendChild(div);
+  messageContainer.appendChild(div);
 }
 
 function updateList(users) {
@@ -58,12 +56,15 @@ function updateList(users) {
     li.appendChild(a);
     list.appendChild(li);
 
-    console.log(username + " " + a.title);
+    a.addEventListener("click", () => {
+      const username2 = a.title;
+      let privateRoom = "proba";
 
-    // a.addEventListener("click", () => {
-    //   const username2 = a.title;
+      if (username > username2) privateRoom = username + " & " + username2;
+      else privateRoom = username2 + " & " + username;
 
-    //   socket.emit("joinRoom", { username });
-    // });
+      messageContainer.innerHTML = "";
+      socket.emit("joinRoom", privateRoom);
+    });
   });
 }

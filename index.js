@@ -22,7 +22,7 @@ io.on("connection", (socket) => {
 
   socket.emit("username", username);
 
-  socket.on("joinRoom", ({ username2, room }) => {
+  socket.on("joinRoom", (room) => {
     console.log("mujo " + room);
 
     const user = userJoin(socket.id, username, room);
@@ -31,7 +31,7 @@ io.on("connection", (socket) => {
 
     socket.emit(
       "message",
-      messageObject("Chat Bot", `Welcome to the global chat room ${username}!`)
+      messageObject("Chat Bot", `Welcome to the ${room} chat ${username}!`)
     );
 
     // runs when user connects
