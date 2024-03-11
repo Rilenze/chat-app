@@ -4,7 +4,6 @@ const list = document.getElementById("users");
 const messageContainer = document.getElementById("message-container");
 const global = document.getElementById("global");
 const frontUsername = document.getElementById("username");
-const frontRoom = document.getElementById("room");
 const join = document.getElementById("join");
 
 const socket = io();
@@ -72,6 +71,7 @@ function updateList(users) {
     list.appendChild(li);
 
     a.addEventListener("click", () => {
+      alert(`You have sent request for private chat with ${a.text}`);
       console.log(a.text + " " + a.title);
 
       const username2 = a.text;
@@ -90,7 +90,6 @@ function updateList(users) {
 
 socket.on("clearChat", (message) => {
   messageContainer.innerHTML = "";
-  frontRoom.innerHTML = `Chat room: ${room}`;
   putMessageInChat(message);
 });
 
@@ -99,6 +98,5 @@ global.addEventListener("click", () => {
   const onlineUser = username;
   const room = "Global";
   messageContainer.innerHTML = "";
-  frontRoom.innerHTML = `Chat room: ${room}`;
   socket.emit("joinRoom", { onlineUser, room });
 });
