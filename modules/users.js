@@ -38,8 +38,8 @@ function userChangeRoom(id, room) {
   }
 }
 
-function getUserIdByUsername(username) {
-  return users.find((user) => user.username === username).id;
+function getUserByUsername(username) {
+  return users.find((user) => user.username === username);
 }
 
 module.exports = {
@@ -48,5 +48,5 @@ module.exports = {
   getOnlineUsers,
   getCurrentUser,
   userChangeRoom,
-  getUserIdByUsername,
+  getUserByUsername,
 };
