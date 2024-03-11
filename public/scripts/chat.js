@@ -17,7 +17,8 @@ socket.on("message", (message) => {
 });
 
 socket.on("users", (users) => {
-  updateList(users);
+  const onlineUsers = users.filter((user) => user.id !== socket.id);
+  updateList(onlineUsers);
 });
 
 socket.on("username", (usr) => {
