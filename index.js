@@ -26,19 +26,21 @@ app.get("/", function (req, res) {
 io.on("connection", (socket) => {
   fs.readFile("public/data/messages.json", (error, data) => {
     const messages = JSON.parse(data);
-    console.log(messages);
     io.emit("restoreGlobalChat", messages);
   });
 
   socket.on("joinRoom", ({ username, room }) => {
     console.log("mujo " + room);
 
-    const user = userJoin(socket.id, username, room);
-    // else {
-    //   const user = getCurrentUser(socket.id);
-    //   socket.leave(user.room);
-    //   userChangeRoom(socket.id, room);
-    // }
+    let user = getCurrentUser(socket.id);
+    if (!user) {
+      user = userJoin(socket.id, username, room);
+      // Sending users to frontend
+      io.emit("users", getOnlineUsers());
+    } else {
+      socket.leave(user.room);
+      userChangeRoom(socket.id, room);
+    }
 
     socket.join(user.room);
 
@@ -57,50 +59,47 @@ io.on("connection", (socket) => {
         "message",
         messageObject("Chat Bot", `${user.username} has joined the chat`)
       );
-
-    // Sending users to frontend
-    io.emit("users", getOnlineUsers());
   });
 
-  socket.on("privateRoomClick", ({ otherUserId, privateRoom }) => {
-    const socket2 = io.sockets.sockets.get(otherUserId);
-    const senderId = socket.id;
-    socket2.emit("privateRoomRequest", { senderId, privateRoom });
-  });
+  // socket.on("privateRoomClick", ({ otherUserId, privateRoom }) => {
+  //   const socket2 = io.sockets.sockets.get(otherUserId);
+  //   const senderId = socket.id;
+  //   socket2.emit("privateRoomRequest", { senderId, privateRoom });
+  // });
 
-  socket.on("joinPrivateRoom", ({ senderId, privateRoom }) => {
-    const socket2 = io.sockets.sockets.get(senderId);
+  // socket.on("joinPrivateRoom", ({ senderId, privateRoom }) => {
+  //   const socket2 = io.sockets.sockets.get(senderId);
 
-    const user = getCurrentUser(socket.id);
-    const user2 = getCurrentUser(socket2.id);
-    socket.emit(
-      "clearChat",
-      messageObject(
-        "Chat Bot",
-        `Welcome to the private chat with ${user2.username}!`
-      )
-    );
-    socket2.emit(
-      "clearChat",
-      messageObject(
-        "Chat Bot",
-        `Welcome to the private chat with ${user.username}!`
-      )
-    );
+  //   const user = getCurrentUser(socket.id);
+  //   const user2 = getCurrentUser(socket2.id);
+  //   socket.emit(
+  //     "clearChat",
+  //     messageObject(
+  //       "Chat Bot",
+  //       `Welcome to the private chat with ${user2.username}!`
+  //     )
+  //   );
+  //   socket2.emit(
+  //     "clearChat",
+  //     messageObject(
+  //       "Chat Bot",
+  //       `Welcome to the private chat with ${user.username}!`
+  //     )
+  //   );
 
-    socket.leave("Global");
-    socket2.leave("Global");
-    userChangeRoom(socket.id, privateRoom);
-    userChangeRoom(socket2.id, privateRoom);
-    socket.join(privateRoom);
-    socket2.join(privateRoom);
-  });
+  //   socket.leave("Global");
+  //   socket2.leave("Global");
+  //   userChangeRoom(socket.id, privateRoom);
+  //   userChangeRoom(socket2.id, privateRoom);
+  //   socket.join(privateRoom);
+  //   socket2.join(privateRoom);
+  // });
 
   // catching chat message
   socket.on("chatMessage", (message) => {
-    fs.readFile("public/data/messages.json", function (err, data) {
-      const user = getCurrentUser(socket.id);
+    const user = getCurrentUser(socket.id);
 
+    fs.readFile("public/data/messages.json", function (err, data) {
       let oldMessages = JSON.parse(data);
       const object = {
         username: user.username,
@@ -117,7 +116,6 @@ io.on("connection", (socket) => {
       );
     });
 
-    const user = getCurrentUser(socket.id);
     console.log("Soba: " + user.room + ". Username: " + user.username);
     io.to(user.room).emit("message", messageObject(user.username, message));
   });

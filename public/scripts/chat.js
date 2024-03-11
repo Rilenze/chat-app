@@ -36,14 +36,14 @@ socket.on("users", (users) => {
   updateList(onlineUsers);
 });
 
-socket.on("privateRoomRequest", ({ senderId, privateRoom }) => {
-  const joinButton = document.createElement("button");
-  joinButton.innerHTML = "Join";
-  join.appendChild(joinButton);
-  joinButton.addEventListener("click", () => {
-    socket.emit("joinPrivateRoom", { senderId, privateRoom });
-  });
-});
+// socket.on("privateRoomRequest", ({ senderId, privateRoom }) => {
+//   const joinButton = document.createElement("button");
+//   joinButton.innerHTML = "Join";
+//   join.appendChild(joinButton);
+//   joinButton.addEventListener("click", () => {
+//     socket.emit("joinPrivateRoom", { senderId, privateRoom });
+//   });
+// });
 
 // Sending global chat room on the beggining of the connection
 socket.emit("joinRoom", { username, room });
@@ -81,27 +81,25 @@ function updateList(users) {
     list.appendChild(li);
 
     a.addEventListener("click", () => {
-      alert(`You have sent request for private chat with ${a.text}`);
-      console.log(a.text + " " + a.title);
-
       const username2 = a.text;
 
-      // if (username === username2) return;
-      // else if (username > username2) room = username + " & " + username2;
-      // else room = username2 + " & " + username;
+      let room = null;
+      if (username > username2) room = username + "&" + username2;
+      else room = username2 + "&" + username;
 
-      const privateRoom = username + "-" + username2;
-      const otherUserId = a.title;
+      //const otherUserId = a.title;
 
-      socket.emit("privateRoomClick", { otherUserId, privateRoom });
+      messageContainer.innerHTML = "";
+
+      socket.emit("joinRoom", { username, room });
     });
   });
 }
 
-socket.on("clearChat", (message) => {
-  messageContainer.innerHTML = "";
-  putMessageInChat(message);
-});
+// socket.on("clearChat", (message) => {
+//   messageContainer.innerHTML = "";
+//   putMessageInChat(message);
+// });
 
 global.addEventListener("click", () => {
   console.log("mrmot");
