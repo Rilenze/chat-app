@@ -12,6 +12,8 @@ const {
 const usernameGenerator = require("username-generator");
 const fs = require("fs");
 
+let username = null;
+
 const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
@@ -30,21 +32,22 @@ io.on("connection", (socket) => {
     console.log(messages);
   });
 
-  const username = usernameGenerator.generateUsername();
-
-  socket.emit("username", username);
+  if (!username) {
+    console.log("Treba username");
+    username = usernameGenerator.generateUsername();
+    socket.emit("username", username);
+  }
 
   socket.on("joinRoom", ({ onlineUser, room }) => {
     console.log("mujo " + room);
 
     if (!onlineUser) userJoin(socket.id, username, room);
-    else {
-      const user = getCurrentUser(socket.id);
-      socket.leave(user.room);
-      userChangeRoom(socket.id, room);
-    }
+    // else {
+    //   const user = getCurrentUser(socket.id);
+    //   socket.leave(user.room);
+    //   userChangeRoom(socket.id, room);
+    // }
 
-    console.log(room);
     socket.join(room);
 
     socket.emit(
@@ -61,7 +64,7 @@ io.on("connection", (socket) => {
       );
 
     // Sending users to frontend
-    if (room === "Global") io.emit("users", getOnlineUsers());
+    if (!onlineUser) io.emit("users", getOnlineUsers());
   });
 
   socket.on("privateRoomClick", ({ otherUserId, privateRoom }) => {
@@ -100,7 +103,7 @@ io.on("connection", (socket) => {
 
   // catching chat message
   socket.on("chatMessage", (message) => {
-    fs.readFile("public/data/messages.json", (error, data) => {
+    fs.readFile("public/data/messages.json", function (err, data) {
       let oldMessages = JSON.parse(data);
       const object = {
         username: username,
@@ -111,8 +114,8 @@ io.on("connection", (socket) => {
       fs.writeFile(
         "public/data/messages.json",
         JSON.stringify(oldMessages),
-        (error) => {
-          if (error) console.log(error);
+        function (err) {
+          if (err) console.log(err);
         }
       );
     });
