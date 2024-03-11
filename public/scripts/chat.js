@@ -102,6 +102,8 @@ function updateList(users) {
 
       //const otherUserId = a.title;
 
+      const spanHide = document.getElementById(a.title);
+      spanHide.style.visibility = "hidden";
       messageContainer.innerHTML = "";
 
       socket.emit("joinRoom", { username, room });
