@@ -5,6 +5,7 @@ const messageContainer = document.getElementById("message-container");
 const global = document.getElementById("global");
 const frontUsername = document.getElementById("username");
 const frontRoom = document.getElementById("room");
+const join = document.getElementById("join");
 
 const socket = io();
 const room = "Global";
@@ -23,6 +24,15 @@ socket.on("users", (users) => {
 socket.on("username", (usr) => {
   username = usr;
   frontUsername.innerHTML = `Username: ${username}`;
+});
+
+socket.on("privateRoomRequest", ({ senderId, privateRoom }) => {
+  const joinButton = document.createElement("button");
+  joinButton.innerHTML = "Join";
+  join.appendChild(joinButton);
+  joinButton.addEventListener("click", () => {
+    socket.emit("joinPrivateRoom", { senderId, privateRoom });
+  });
 });
 
 // Sending global chat room on the beggining of the connection
@@ -56,23 +66,27 @@ function updateList(users) {
     let naziv = document.createTextNode(user.username);
 
     a.appendChild(naziv);
-    a.title = user.username;
+    a.title = user.id;
     a.href = "#";
     li.appendChild(a);
     list.appendChild(li);
 
     a.addEventListener("click", () => {
-      const username2 = a.title;
-      let room = "proba";
+      console.log(a.text + " " + a.title);
 
-      if (username === username2) return;
-      else if (username > username2) room = username + " & " + username2;
-      else room = username2 + " & " + username;
+      const username2 = a.text;
 
-      const onlineUser = username;
+      // if (username === username2) return;
+      // else if (username > username2) room = username + " & " + username2;
+      // else room = username2 + " & " + username;
+
+      const privateRoom = username + "-" + username2;
+      const otherUserId = a.title;
+
       messageContainer.innerHTML = "";
       frontRoom.innerHTML = `Chat room: ${room}`;
-      socket.emit("joinRoom", { onlineUser, room });
+
+      socket.emit("privateRoomClick", { otherUserId, privateRoom });
     });
   });
 }

@@ -58,6 +58,23 @@ io.on("connection", (socket) => {
     if (room === "Global") io.emit("users", getOnlineUsers());
   });
 
+  socket.on("privateRoomClick", ({ otherUserId, privateRoom }) => {
+    const socket2 = io.sockets.sockets.get(otherUserId);
+    const senderId = socket.id;
+    socket2.emit("privateRoomRequest", { senderId, privateRoom });
+  });
+
+  socket.on("joinPrivateRoom", ({ senderId, privateRoom }) => {
+    const socket2 = io.sockets.sockets.get(senderId);
+
+    socket.leave("Global");
+    socket2.leave("Global");
+    userChangeRoom(socket.id, privateRoom);
+    userChangeRoom(socket2.id, privateRoom);
+    socket.join(privateRoom);
+    socket2.join(privateRoom);
+  });
+
   // catching chat message
   socket.on("chatMessage", (message) => {
     const user = getCurrentUser(socket.id);
