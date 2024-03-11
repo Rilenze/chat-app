@@ -97,22 +97,24 @@ io.on("connection", (socket) => {
 
   // catching chat message
   socket.on("chatMessage", (message) => {
-    // fs.readFile("public/data/messages.json", function (err, data) {
-    //   let oldMessages = JSON.parse(data);
-    //   const object = {
-    //     username: username,
-    //     text: message,
-    //   };
-    //   oldMessages.push(object);
+    fs.readFile("public/data/messages.json", function (err, data) {
+      const user = getCurrentUser(socket.id);
 
-    //   fs.writeFile(
-    //     "public/data/messages.json",
-    //     JSON.stringify(oldMessages),
-    //     function (err) {
-    //       if (err) console.log(err);
-    //     }
-    //   );
-    // });
+      let oldMessages = JSON.parse(data);
+      const object = {
+        username: user.username,
+        text: message,
+      };
+      oldMessages.push(object);
+
+      fs.writeFile(
+        "public/data/messages.json",
+        JSON.stringify(oldMessages),
+        function (err) {
+          if (err) console.log(err);
+        }
+      );
+    });
 
     const user = getCurrentUser(socket.id);
     console.log("Soba: " + user.room + ". Username: " + user.username);
