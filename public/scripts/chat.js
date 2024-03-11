@@ -3,6 +3,8 @@ const input = document.getElementById("message-input");
 const list = document.getElementById("users");
 const messageContainer = document.getElementById("message-container");
 const global = document.getElementById("global");
+const frontUsername = document.getElementById("username");
+const frontRoom = document.getElementById("room");
 
 const socket = io();
 const room = "Global";
@@ -20,6 +22,7 @@ socket.on("users", (users) => {
 
 socket.on("username", (usr) => {
   username = usr;
+  frontUsername.innerHTML = `Username: ${username}`;
 });
 
 // Sending global chat room on the beggining of the connection
@@ -68,6 +71,7 @@ function updateList(users) {
 
       const onlineUser = username;
       messageContainer.innerHTML = "";
+      frontRoom.innerHTML = `Chat room: ${room}`;
       socket.emit("joinRoom", { onlineUser, room });
     });
   });
@@ -78,5 +82,6 @@ global.addEventListener("click", () => {
   const onlineUser = username;
   const room = "Global";
   messageContainer.innerHTML = "";
+  frontRoom.innerHTML = `Chat room: ${room}`;
   socket.emit("joinRoom", { onlineUser, room });
 });
