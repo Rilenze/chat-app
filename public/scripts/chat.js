@@ -15,6 +15,16 @@ if (!username) {
 }
 if (username) frontUsername.innerHTML = `Username: ${username}`;
 
+socket.on("restoreGlobalChat", (messages) => {
+  messages.forEach((message) => {
+    const object = {
+      username: message.username,
+      text: message.text,
+    };
+    putMessageInChat(object);
+  });
+});
+
 socket.on("message", (message) => {
   putMessageInChat(message);
 

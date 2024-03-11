@@ -24,10 +24,11 @@ app.get("/", function (req, res) {
 
 // Running when client connects
 io.on("connection", (socket) => {
-  // fs.readFile("public/data/messages.json", (error, data) => {
-  //   const messages = JSON.parse(data);
-  //   console.log(messages);
-  // });
+  fs.readFile("public/data/messages.json", (error, data) => {
+    const messages = JSON.parse(data);
+    console.log(messages);
+    io.emit("restoreGlobalChat", messages);
+  });
 
   socket.on("joinRoom", ({ username, room }) => {
     console.log("mujo " + room);
