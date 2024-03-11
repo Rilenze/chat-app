@@ -67,8 +67,22 @@ io.on("connection", (socket) => {
   socket.on("joinPrivateRoom", ({ senderId, privateRoom }) => {
     const socket2 = io.sockets.sockets.get(senderId);
 
-    socket.emit("clearChat");
-    socket2.emit("clearChat");
+    const user = getCurrentUser(socket.id);
+    const user2 = getCurrentUser(socket2.id);
+    socket.emit(
+      "clearChat",
+      messageObject(
+        "Chat Bot",
+        `Welcome to the private chat with ${user2.username}!`
+      )
+    );
+    socket2.emit(
+      "clearChat",
+      messageObject(
+        "Chat Bot",
+        `Welcome to the private chat with ${user.username}!`
+      )
+    );
 
     socket.leave("Global");
     socket2.leave("Global");

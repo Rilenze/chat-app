@@ -88,9 +88,10 @@ function updateList(users) {
   });
 }
 
-socket.on("clearChat", () => {
+socket.on("clearChat", (message) => {
   messageContainer.innerHTML = "";
   frontRoom.innerHTML = `Chat room: ${room}`;
+  putMessageInChat(message);
 });
 
 global.addEventListener("click", () => {
