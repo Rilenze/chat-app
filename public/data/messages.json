@@ -1,1 +1,10 @@
-[{"room":"s5z1i427&rw20qx3x","username":"s5z1i427","text":"heeej"},{"room":"s5z1i427&rw20qx3x","username":"rw20qx3x","text":"selmo"}]
+[
+  { "room": "Global", "username": "s5z1i427", "text": "heeej" },
+  { "room": "Global", "username": "rw20qx3x", "text": "selmo" },
+  { "room": "gyjegsif&f6hqd3fw", "username": "gyjegsif", "text": "mujooo" },
+  {
+    "room": "gyjegsif&f6hqd3fw",
+    "username": "f6hqd3fw",
+    "text": "DJee si sajoo baa"
+  }
+]

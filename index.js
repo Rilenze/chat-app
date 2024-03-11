@@ -24,11 +24,6 @@ app.get("/", function (req, res) {
 
 // Running when client connects
 io.on("connection", (socket) => {
-  fs.readFile("public/data/messages.json", (error, data) => {
-    const messages = JSON.parse(data);
-    io.emit("restoreGlobalChat", messages);
-  });
-
   socket.on("joinRoom", ({ username, room }) => {
     console.log("mujo " + room);
 
@@ -44,13 +39,21 @@ io.on("connection", (socket) => {
 
     socket.join(user.room);
 
-    socket.emit(
-      "message",
-      messageObject(
-        "Chat Bot",
-        `Welcome to the ${user.room} chat ${user.username}!`
-      )
-    );
+    fs.readFile("public/data/messages.json", (error, data) => {
+      const allMessages = JSON.parse(data);
+      const roomMessages = allMessages.filter(
+        (message) => message.room === user.room
+      );
+      socket.emit("restoreGlobalChat", roomMessages);
+
+      socket.emit(
+        "message",
+        messageObject(
+          "Chat Bot",
+          `Welcome to the ${user.room} chat ${user.username}!`
+        )
+      );
+    });
 
     // runs when user connects
     socket.broadcast
@@ -102,19 +105,16 @@ io.on("connection", (socket) => {
     fs.readFile("public/data/messages.json", function (err, data) {
       let oldMessages = JSON.parse(data);
 
-      const newMessages = oldMessages.filter(
-        (object) => object.room === user.room
-      );
       const object = {
         room: user.room,
         username: user.username,
         text: message,
       };
-      newMessages.push(object);
+      oldMessages.push(object);
 
       fs.writeFile(
         "public/data/messages.json",
-        JSON.stringify(newMessages),
+        JSON.stringify(oldMessages),
         function (err) {
           if (err) console.log(err);
         }
