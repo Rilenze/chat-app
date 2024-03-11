@@ -67,6 +67,9 @@ io.on("connection", (socket) => {
   socket.on("joinPrivateRoom", ({ senderId, privateRoom }) => {
     const socket2 = io.sockets.sockets.get(senderId);
 
+    socket.emit("clearChat");
+    socket2.emit("clearChat");
+
     socket.leave("Global");
     socket2.leave("Global");
     userChangeRoom(socket.id, privateRoom);

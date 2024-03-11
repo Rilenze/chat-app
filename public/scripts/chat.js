@@ -83,13 +83,15 @@ function updateList(users) {
       const privateRoom = username + "-" + username2;
       const otherUserId = a.title;
 
-      messageContainer.innerHTML = "";
-      frontRoom.innerHTML = `Chat room: ${room}`;
-
       socket.emit("privateRoomClick", { otherUserId, privateRoom });
     });
   });
 }
+
+socket.on("clearChat", () => {
+  messageContainer.innerHTML = "";
+  frontRoom.innerHTML = `Chat room: ${room}`;
+});
 
 global.addEventListener("click", () => {
   console.log("mrmot");
