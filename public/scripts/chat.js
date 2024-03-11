@@ -70,14 +70,20 @@ function updateList(users) {
 
   users.forEach((user) => {
     let li = document.createElement("li");
+
+    let span = document.createElement("span");
+    span.setAttribute("id", user.id);
+    span.style.visibility = "hidden";
+
     let a = document.createElement("a");
     a.setAttribute("id", user.username);
     let naziv = document.createTextNode(user.username);
-
     a.appendChild(naziv);
     a.title = user.id;
     a.href = "#";
+
     li.appendChild(a);
+    li.appendChild(span);
     list.appendChild(li);
 
     a.addEventListener("click", () => {
