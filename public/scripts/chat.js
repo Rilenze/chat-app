@@ -8,7 +8,12 @@ const join = document.getElementById("join");
 
 const socket = io();
 const room = "Global";
-let username = "Čeka";
+let username = sessionStorage.getItem("username");
+if (!username) {
+  username = generateUsername();
+  sessionStorage.setItem("username", username);
+}
+if (username) frontUsername.innerHTML = `Username: ${username}`;
 
 socket.on("message", (message) => {
   putMessageInChat(message);
@@ -21,11 +26,6 @@ socket.on("users", (users) => {
   updateList(onlineUsers);
 });
 
-socket.on("username", (usr) => {
-  username = usr;
-  frontUsername.innerHTML = `Username: ${username}`;
-});
-
 socket.on("privateRoomRequest", ({ senderId, privateRoom }) => {
   const joinButton = document.createElement("button");
   joinButton.innerHTML = "Join";
@@ -36,8 +36,7 @@ socket.on("privateRoomRequest", ({ senderId, privateRoom }) => {
 });
 
 // Sending global chat room on the beggining of the connection
-const onlineUser = null;
-socket.emit("joinRoom", { onlineUser, room });
+socket.emit("joinRoom", { username, room });
 
 chatForm.addEventListener("submit", (e) => {
   e.preventDefault();
@@ -96,8 +95,18 @@ socket.on("clearChat", (message) => {
 
 global.addEventListener("click", () => {
   console.log("mrmot");
-  const onlineUser = username;
   const room = "Global";
   messageContainer.innerHTML = "";
-  socket.emit("joinRoom", { onlineUser, room });
+  socket.emit("joinRoom", { username, room });
 });
+
+function generateUsername() {
+  const characters = "abcdefghijklmnopqrstuvwxyz0123456789";
+  let username = "";
+  for (let i = 0; i < 8; i++) {
+    username += characters.charAt(
+      Math.floor(Math.random() * characters.length)
+    );
+  }
+  return username;
+}

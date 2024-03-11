@@ -9,10 +9,7 @@ const {
   getCurrentUser,
   userChangeRoom,
 } = require("./modules/users");
-const usernameGenerator = require("username-generator");
 const fs = require("fs");
-
-let username = null;
 
 const app = express();
 const server = http.createServer(app);
@@ -27,44 +24,41 @@ app.get("/", function (req, res) {
 
 // Running when client connects
 io.on("connection", (socket) => {
-  fs.readFile("public/data/messages.json", (error, data) => {
-    const messages = JSON.parse(data);
-    console.log(messages);
-  });
+  // fs.readFile("public/data/messages.json", (error, data) => {
+  //   const messages = JSON.parse(data);
+  //   console.log(messages);
+  // });
 
-  if (!username) {
-    console.log("Treba username");
-    username = usernameGenerator.generateUsername();
-    socket.emit("username", username);
-  }
-
-  socket.on("joinRoom", ({ onlineUser, room }) => {
+  socket.on("joinRoom", ({ username, room }) => {
     console.log("mujo " + room);
 
-    if (!onlineUser) userJoin(socket.id, username, room);
+    const user = userJoin(socket.id, username, room);
     // else {
     //   const user = getCurrentUser(socket.id);
     //   socket.leave(user.room);
     //   userChangeRoom(socket.id, room);
     // }
 
-    socket.join(room);
+    socket.join(user.room);
 
     socket.emit(
       "message",
-      messageObject("Chat Bot", `Welcome to the ${room} chat ${username}!`)
+      messageObject(
+        "Chat Bot",
+        `Welcome to the ${user.room} chat ${user.username}!`
+      )
     );
 
     // runs when user connects
     socket.broadcast
-      .to(room)
+      .to(user.room)
       .emit(
         "message",
-        messageObject("Chat Bot", `${username} has joined the chat`)
+        messageObject("Chat Bot", `${user.username} has joined the chat`)
       );
 
     // Sending users to frontend
-    if (!onlineUser) io.emit("users", getOnlineUsers());
+    io.emit("users", getOnlineUsers());
   });
 
   socket.on("privateRoomClick", ({ otherUserId, privateRoom }) => {
@@ -103,26 +97,26 @@ io.on("connection", (socket) => {
 
   // catching chat message
   socket.on("chatMessage", (message) => {
-    fs.readFile("public/data/messages.json", function (err, data) {
-      let oldMessages = JSON.parse(data);
-      const object = {
-        username: username,
-        text: message,
-      };
-      oldMessages.push(object);
+    // fs.readFile("public/data/messages.json", function (err, data) {
+    //   let oldMessages = JSON.parse(data);
+    //   const object = {
+    //     username: username,
+    //     text: message,
+    //   };
+    //   oldMessages.push(object);
 
-      fs.writeFile(
-        "public/data/messages.json",
-        JSON.stringify(oldMessages),
-        function (err) {
-          if (err) console.log(err);
-        }
-      );
-    });
+    //   fs.writeFile(
+    //     "public/data/messages.json",
+    //     JSON.stringify(oldMessages),
+    //     function (err) {
+    //       if (err) console.log(err);
+    //     }
+    //   );
+    // });
 
     const user = getCurrentUser(socket.id);
     console.log("Soba: " + user.room + ". Username: " + user.username);
-    io.to(user.room).emit("message", messageObject(username, message));
+    io.to(user.room).emit("message", messageObject(user.username, message));
   });
 
   // runs when user disconnects
@@ -132,7 +126,7 @@ io.on("connection", (socket) => {
     if (leavingUser) {
       io.emit(
         "message",
-        messageObject("Chat Bot", `${username} has left the chat`)
+        messageObject("Chat Bot", `${leavingUser.username} has left the chat`)
       );
 
       io.emit("users", getOnlineUsers());
