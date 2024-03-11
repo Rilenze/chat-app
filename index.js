@@ -10,6 +10,7 @@ const {
   userChangeRoom,
 } = require("./modules/users");
 const usernameGenerator = require("username-generator");
+const fs = require("fs");
 
 const app = express();
 const server = http.createServer(app);
@@ -24,6 +25,11 @@ app.get("/", function (req, res) {
 
 // Running when client connects
 io.on("connection", (socket) => {
+  fs.readFile("public/data/messages.json", (error, data) => {
+    const messages = JSON.parse(data);
+    console.log(messages);
+  });
+
   const username = usernameGenerator.generateUsername();
 
   socket.emit("username", username);
@@ -94,6 +100,23 @@ io.on("connection", (socket) => {
 
   // catching chat message
   socket.on("chatMessage", (message) => {
+    fs.readFile("public/data/messages.json", (error, data) => {
+      let oldMessages = JSON.parse(data);
+      const object = {
+        username: username,
+        text: message,
+      };
+      oldMessages.push(object);
+
+      fs.writeFile(
+        "public/data/messages.json",
+        JSON.stringify(oldMessages),
+        (error) => {
+          if (error) console.log(error);
+        }
+      );
+    });
+
     const user = getCurrentUser(socket.id);
     console.log("Soba: " + user.room + ". Username: " + user.username);
     io.to(user.room).emit("message", messageObject(username, message));
