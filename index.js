@@ -8,6 +8,7 @@ const {
   getOnlineUsers,
   getCurrentUser,
   userChangeRoom,
+  getUserIdByUsername,
 } = require("./modules/users");
 const fs = require("fs");
 
@@ -121,6 +122,21 @@ io.on("connection", (socket) => {
       );
     });
 
+    if (user.room !== "Global") {
+      const privateChatUsernames = user.room.split("&");
+      const username1 = privateChatUsernames[0];
+      const username2 = privateChatUsernames[1];
+      let recieverId = null;
+      if (user.username === username1)
+        recieverId = getUserIdByUsername(username2);
+      else if (user.username === username2)
+        recieverId = getUserIdByUsername(username1);
+      else console.log("Error");
+      const recieverSocket = io.sockets.sockets.get(recieverId);
+      console.log("imalj koga: " + recieverSocket.id);
+
+      recieverSocket.emit("sendMessageNotification", user.id);
+    }
     console.log("Soba: " + user.room + ". Username: " + user.username);
     io.to(user.room).emit("message", messageObject(user.username, message));
   });

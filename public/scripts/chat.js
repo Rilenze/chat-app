@@ -36,6 +36,13 @@ socket.on("users", (users) => {
   updateList(onlineUsers);
 });
 
+socket.on("sendMessageNotification", (recieverSocketId) => {
+  console.log("Socket primaoca: " + recieverSocketId);
+
+  const span = document.getElementById(recieverSocketId);
+  span.style.visibility = "visible";
+});
+
 // socket.on("privateRoomRequest", ({ senderId, privateRoom }) => {
 //   const joinButton = document.createElement("button");
 //   joinButton.innerHTML = "Join";

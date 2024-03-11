@@ -38,10 +38,15 @@ function userChangeRoom(id, room) {
   }
 }
 
+function getUserIdByUsername(username) {
+  return users.find((user) => user.username === username).id;
+}
+
 module.exports = {
   userJoin,
   userLeaves,
   getOnlineUsers,
   getCurrentUser,
   userChangeRoom,
+  getUserIdByUsername,
 };
