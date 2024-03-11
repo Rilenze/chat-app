@@ -101,15 +101,20 @@ io.on("connection", (socket) => {
 
     fs.readFile("public/data/messages.json", function (err, data) {
       let oldMessages = JSON.parse(data);
+
+      const newMessages = oldMessages.filter(
+        (object) => object.room === user.room
+      );
       const object = {
+        room: user.room,
         username: user.username,
         text: message,
       };
-      oldMessages.push(object);
+      newMessages.push(object);
 
       fs.writeFile(
         "public/data/messages.json",
-        JSON.stringify(oldMessages),
+        JSON.stringify(newMessages),
         function (err) {
           if (err) console.log(err);
         }
