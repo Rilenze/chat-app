@@ -31,7 +31,7 @@ body {
 }
 
 #send-button:hover {
-    background: #d3d7fc;
+    background: #999ed1;
 }
 
 
@@ -107,11 +107,12 @@ a {
 }
 
 a:hover {
-    color: #fff;
+    font-weight: bold;
 }
 
 #global-container {
     margin-bottom: 10px;
+    margin-top: 10px;
 }
 
 #username {
@@ -129,4 +130,11 @@ a:hover {
     height: 12px;
     background: red;
     border-radius: 50%;
+}
+
+.chats {
+    font-size: 18px;
+    font-style: italic;
+    text-decoration: underline;
+    
 }

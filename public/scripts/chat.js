@@ -2,9 +2,7 @@ const chatForm = document.getElementById("form");
 const input = document.getElementById("message-input");
 const list = document.getElementById("users");
 const messageContainer = document.getElementById("message-container");
-const global = document.getElementById("global");
 const frontUsername = document.getElementById("username");
-const join = document.getElementById("join");
 
 const socket = io();
 const room = "Global";
