@@ -6,7 +6,6 @@ function userJoin(id, username, room) {
 
   users.push(user);
 
-  console.log(users);
   return user;
 }
 
@@ -16,7 +15,6 @@ function userLeaves(id) {
 
   if (index !== -1) {
     const user = users.splice(index, 1)[0];
-    console.log(users);
     return user;
   }
 }
@@ -34,7 +32,6 @@ function userChangeRoom(id, room) {
 
   if (index !== -1) {
     users[index].room = room;
-    console.log(users);
   }
 }
 

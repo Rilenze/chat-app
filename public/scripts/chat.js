@@ -37,8 +37,6 @@ socket.on("users", (users) => {
 });
 
 socket.on("sendMessageNotification", (recieverSocketId) => {
-  console.log("Socket primaoca: " + recieverSocketId);
-
   const span = document.getElementById(recieverSocketId);
   span.style.visibility = "visible";
 });
@@ -117,7 +115,6 @@ function updateList(users) {
 // });
 
 global.addEventListener("click", () => {
-  console.log("mrmot");
   const room = "Global";
   messageContainer.innerHTML = "";
   socket.emit("joinRoom", { username, room });

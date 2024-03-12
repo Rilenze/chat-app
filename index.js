@@ -26,8 +26,6 @@ app.get("/", function (req, res) {
 // Running when client connects
 io.on("connection", (socket) => {
   socket.on("joinRoom", ({ username, room }) => {
-    console.log("mujo " + room);
-
     let user = getCurrentUser(socket.id);
     if (!user) {
       user = userJoin(socket.id, username, room);
@@ -138,8 +136,11 @@ io.on("connection", (socket) => {
       if (reciever.room !== user.room)
         recieverSocket.emit("sendMessageNotification", user.id);
     }
-    console.log("Soba: " + user.room + ". Username: " + user.username);
-    io.to(user.room).emit("message", messageObject(user.username, message));
+    //io.to(user.room).emit("message", messageObject(user.username, message));
+    socket.emit("message", messageObject("You", message));
+    socket.broadcast
+      .to(user.room)
+      .emit("message", messageObject(user.username, message));
   });
 
   // runs when user disconnects
@@ -157,4 +158,4 @@ io.on("connection", (socket) => {
   });
 });
 
-server.listen(3000, () => console.log("Server running on port 3000"));
+server.listen(3000);
