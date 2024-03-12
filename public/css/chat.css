@@ -35,6 +35,7 @@ body {
     display: flex;
     flex-direction: column;
     max-width: 300px;
+    min-height: 300px;
 }
 
 #message-container {
@@ -133,3 +134,9 @@ a:hover {
     text-decoration: underline;
     
 }
+
+@media (max-width: 590px) {
+    #chat-container {
+        flex-direction: column;
+    }
+} 
