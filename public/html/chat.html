@@ -8,23 +8,23 @@
 </head>
 <body>
     <div id="chat-container">
-        <div id="main">
-            <div id="user-sidebar">
-                <h3 id="username"></h3>
-                <p class="chats">Group chats:</p>
-                <div id="global-container">
-                    <a id="global">Global chat</a>
-                </div>
-                <p class="chats">Online users:</p>
-                <ul id="users"></ul>
+        <div id="user-sidebar">
+            <h3 id="username"></h3>
+            <p class="chats">Group chats:</p>
+            <div id="global-container">
+                <a id="global">Global chat</a>
             </div>
-            <div id="message-container"></div>
+            <p class="chats">Online users:</p>
+            <ul id="users"></ul>
         </div>
-        <form id="form">
-            <label for="message-input"></label>
-            <input type="text" id="message-input">
-            <button type="submit" id="send-button">Send</button>
-        </form>
+        <div id="main">
+            <div id="message-container"></div>
+            <form id="form">
+                <label for="message-input"></label>
+                <input type="text" id="message-input">
+                <button type="submit" id="send-button">Send</button>
+            </form>
+        </div>
     </div>
     
     <script src="/socket.io/socket.io.js"></script>

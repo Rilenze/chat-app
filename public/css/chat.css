@@ -19,23 +19,8 @@ body {
 	font-size: 16px;
 }
 
-#send-button {
-    cursor: pointer;
-    padding: 5px 15px;
-    background: #b1b8e9;
-    border: 0;
-    border-radius: 5px;
-    color: #4559f7;
-    font-size: 15px;
-    font-weight: bold;
-}
-
-#send-button:hover {
-    background: #999ed1;
-}
-
-
 #chat-container {
+    display: flex;
     max-width: 1100px; 
     background: lightblue;
     /* overflow: hidden; */
@@ -44,9 +29,9 @@ body {
 }
 
 #main {
-    display: flex;
+    /* display: flex; */
     /* padding: 20px; */
-    margin-bottom: 20px;
+    /* margin-bottom: 20px; */
 }
 
 #user-sidebar {
@@ -62,6 +47,7 @@ body {
     height: 300px;
     width: 300px;
     background: #fff;
+    margin-bottom: 10px;
 }
 
 .message {
@@ -80,13 +66,27 @@ body {
 }
 
 #form {
-    float: right;
+    display: flex;
 } 
 
 #message-input {
-    width: 230px;
-    height: 25px;
-    
+    margin-right: 5px;
+    flex-grow: 1;
+}
+
+#send-button {
+    cursor: pointer;
+    padding: 5px 15px;
+    background: #b1b8e9;
+    border: 0;
+    border-radius: 5px;
+    color: #4559f7;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+#send-button:hover {
+    background: #999ed1;
 }
 
 #user-sidebar {
