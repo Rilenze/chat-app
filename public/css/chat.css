@@ -28,7 +28,10 @@ body {
 }
 
 #user-sidebar {
+    padding-right: 10px;
     margin-right: 20px;
+    overflow-y: scroll;
+    max-height: 250px;
 }
 
 #main {
@@ -85,12 +88,6 @@ body {
     background: #999ed1;
 }
 
-#user-sidebar {
-    overflow-y: scroll;
-    padding-right: 10px;
-    height: 300px;
-}
-
 #users li {
     padding: 10px 5px;
     font-size: 16px;
@@ -115,10 +112,6 @@ a:hover {
     margin-bottom: 10px;
 }
 
-#room {
-    margin-bottom: 10px;
-}
-
 #users li span {
     margin-left: 5px;
     display: inline-block;
@@ -135,8 +128,14 @@ a:hover {
     
 }
 
-@media (max-width: 590px) {
+@media (orientation: portrait) {
     #chat-container {
         flex-direction: column;
+    }
+
+    #user-sidebar {
+        padding-right: 0px;
+        margin-right: 0px;
+        margin-bottom: 10px;
     }
 } 
