@@ -31,14 +31,14 @@ body {
     padding-right: 10px;
     margin-right: 20px;
     overflow-y: scroll;
-    max-height: 250px;
+    max-height: 300px;
 }
 
 #main {
     display: flex;
     flex-direction: column;
-    max-width: 300px;
-    min-height: 300px;
+    
+    
 }
 
 #message-container {
@@ -47,6 +47,10 @@ body {
 	overflow-y: scroll;
     background: #fff;
     margin-bottom: 10px;
+    max-height: 300px;
+    min-height: 300px;
+    max-width: 300px;
+    min-width: 300px;
 }
 
 .message {
@@ -137,5 +141,6 @@ a:hover {
         padding-right: 0px;
         margin-right: 0px;
         margin-bottom: 10px;
+        max-height: 200px;
     }
 } 
